@@ -829,18 +829,37 @@ app.get('/api/dashboard/stats', requireAuth, async (req, res) => {
 // ============================================
 
 app.get('/login', (req, res) => {
+    // If already logged in, redirect to appropriate page
+    if (req.session && req.session.userId) {
+        return res.redirect('/dashboard');
+    }
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 app.get('/dashboard', (req, res) => {
+    // Require authentication
+    if (!req.session || !req.session.userId) {
+        return res.redirect('/login');
+    }
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
 app.get('/admin', (req, res) => {
+    // Require admin authentication
+    if (!req.session || !req.session.userId) {
+        return res.redirect('/login');
+    }
+    if (!req.session.isAdmin) {
+        return res.redirect('/dashboard');
+    }
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
 app.get('/change-password', (req, res) => {
+    // Require authentication
+    if (!req.session || !req.session.userId) {
+        return res.redirect('/login');
+    }
     res.sendFile(path.join(__dirname, 'public', 'change-password.html'));
 });
 
