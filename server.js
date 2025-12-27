@@ -886,26 +886,12 @@ app.get('/admin', async (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-app.get('/change-password', async (req, res) => {
+app.get('/change-password', (req, res) => {
     // Require authentication
     if (!req.session || !req.session.userId) {
         return res.redirect('/login');
     }
-    
-    // Check if actually needs to change password, if not redirect
-    try {
-        const result = await pool.query('SELECT must_change_password FROM users WHERE id = $1', [req.session.userId]);
-        if (result.rows.length > 0 && !result.rows[0].must_change_password) {
-            // Password already changed, redirect to appropriate page
-            if (req.session.isAdmin) {
-                return res.redirect('/admin');
-            }
-            return res.redirect('/dashboard');
-        }
-    } catch (err) {
-        console.error('Error checking password status:', err);
-    }
-    
+    // Always serve the page - let user change password
     res.sendFile(path.join(__dirname, 'public', 'change-password.html'));
 });
 

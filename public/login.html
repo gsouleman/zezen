@@ -68,19 +68,24 @@
         fetch('/api/auth/status')
             .then(res => res.json())
             .then(data => {
+                console.log('Auth status:', data);
                 if (data.authenticated) {
                     if (data.mustChangePassword) {
-                        window.location.href = '/change-password';
+                        window.location.replace('/change-password');
                     } else if (data.isAdmin) {
-                        window.location.href = '/admin';
+                        window.location.replace('/admin');
                     } else {
-                        window.location.href = '/dashboard';
+                        window.location.replace('/dashboard');
                     }
                 }
             });
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Signing in...</span>';
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
@@ -93,23 +98,32 @@
                 });
                 
                 const data = await res.json();
+                console.log('Login response:', data);
                 
                 if (res.ok) {
-                    showToast('Login successful!', 'success');
+                    showToast('Login successful! Redirecting...', 'success');
                     
-                    // Check if password change is required
+                    // Force redirect based on user status
                     if (data.user.must_change_password) {
-                        setTimeout(() => window.location.href = '/change-password', 500);
+                        console.log('Redirecting to change-password');
+                        window.location.replace('/change-password');
                     } else if (data.user.is_admin) {
-                        setTimeout(() => window.location.href = '/admin', 500);
+                        console.log('Redirecting to admin');
+                        window.location.replace('/admin');
                     } else {
-                        setTimeout(() => window.location.href = '/dashboard', 500);
+                        console.log('Redirecting to dashboard');
+                        window.location.replace('/dashboard');
                     }
                 } else {
                     showToast(data.error || 'Login failed', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Sign In</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
                 }
             } catch (err) {
+                console.error('Login error:', err);
                 showToast('Connection error', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<span>Sign In</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
             }
         });
 
