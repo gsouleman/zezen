@@ -81,7 +81,7 @@
         let users = [];
         
         // Helper for fetch with credentials
-        const apiFetch = (url, options = {}) => fetch(url, { credentials: 'include', ...options });
+        const apiFetch = (url, options = {}) => fetch(url, { credentials: 'same-origin', ...options });
         
         apiFetch('/api/auth/status').then(r => r.json()).then(data => {
             console.log('Admin auth status:', data);

@@ -100,10 +100,9 @@
                 if (data.authenticated) {
                     if (data.mustChangePassword) {
                         window.location.href = '/change-password';
-                    } else if (data.isAdmin) {
-                        window.location.href = '/admin';
                     } else {
-                        window.location.href = '/dashboard';
+                        // Redirect to main site
+                        window.location.href = '/';
                     }
                 }
             } catch (err) {

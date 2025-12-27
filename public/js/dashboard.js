@@ -8,7 +8,7 @@ let currentUser = null;
 // Helper function for fetch with credentials
 async function apiFetch(url, options = {}) {
     const defaultOptions = {
-        credentials: 'include',
+        credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
             ...options.headers
@@ -132,12 +132,16 @@ async function loadDashboardData() {
 async function loadStats() {
     try {
         const res = await apiFetch('/api/dashboard/stats');
+        if (!res.ok) {
+            console.error('Stats API error:', res.status);
+            return;
+        }
         const stats = await res.json();
         
-        document.getElementById('stat-creditors').textContent = formatCurrency(stats.total_owed_to_creditors);
-        document.getElementById('stat-debtors').textContent = formatCurrency(stats.total_owed_by_debtors);
-        document.getElementById('stat-net').textContent = formatCurrency(stats.net_position);
-        document.getElementById('stat-contacts').textContent = stats.creditor_count + stats.debtor_count;
+        document.getElementById('stat-creditors').textContent = formatCurrency(stats.total_owed_to_creditors || 0);
+        document.getElementById('stat-debtors').textContent = formatCurrency(stats.total_owed_by_debtors || 0);
+        document.getElementById('stat-net').textContent = formatCurrency(stats.net_position || 0);
+        document.getElementById('stat-contacts').textContent = (stats.creditor_count || 0) + (stats.debtor_count || 0);
     } catch (err) {
         console.error('Error loading stats:', err);
     }
@@ -146,41 +150,69 @@ async function loadStats() {
 async function loadCreditors() {
     try {
         const res = await apiFetch('/api/creditors');
-        creditors = await res.json();
+        if (!res.ok) {
+            console.error('Creditors API error:', res.status);
+            creditors = [];
+        } else {
+            const data = await res.json();
+            creditors = Array.isArray(data) ? data : [];
+        }
         renderCreditorsTable();
         renderRecentCreditors();
     } catch (err) {
         console.error('Error loading creditors:', err);
+        creditors = [];
+        renderCreditorsTable();
     }
 }
 
 async function loadDebtors() {
     try {
         const res = await apiFetch('/api/debtors');
-        debtors = await res.json();
+        if (!res.ok) {
+            console.error('Debtors API error:', res.status);
+            debtors = [];
+        } else {
+            const data = await res.json();
+            debtors = Array.isArray(data) ? data : [];
+        }
         renderDebtorsTable();
         renderRecentDebtors();
     } catch (err) {
         console.error('Error loading debtors:', err);
+        debtors = [];
+        renderDebtorsTable();
     }
 }
 
 async function loadPayments() {
     try {
         const res = await apiFetch('/api/payments');
-        payments = await res.json();
+        if (!res.ok) {
+            console.error('Payments API error:', res.status);
+            payments = [];
+        } else {
+            const data = await res.json();
+            payments = Array.isArray(data) ? data : [];
+        }
         renderPaymentsTable();
     } catch (err) {
         console.error('Error loading payments:', err);
+        payments = [];
+        renderPaymentsTable();
     }
 }
 
 async function loadProfile() {
     try {
         const res = await apiFetch('/api/auth/profile');
+        if (!res.ok) {
+            console.error('Profile API error:', res.status);
+            return;
+        }
         currentUser = await res.json();
-        document.getElementById('user-name').textContent = currentUser.full_name;
-        document.getElementById('profile-name').value = currentUser.full_name;
+        document.getElementById('user-name').textContent = currentUser.full_name || 'User';
+        document.getElementById('profile-name').value = currentUser.full_name || '';
         document.getElementById('profile-phone').value = currentUser.phone || '';
         document.getElementById('profile-address').value = currentUser.address || '';
     } catch (err) {

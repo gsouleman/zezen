@@ -263,6 +263,9 @@ app.post('/api/auth/login', async (req, res) => {
 
                 console.log('Login successful:', username, 'Session:', req.sessionID?.substring(0, 8));
                 
+                // After password change, redirect to main site
+                const redirectUrl = user.must_change_password ? '/change-password' : '/';
+                
                 res.json({
                     success: true,
                     user: {
@@ -272,7 +275,7 @@ app.post('/api/auth/login', async (req, res) => {
                         is_admin: user.is_admin,
                         must_change_password: user.must_change_password
                     },
-                    redirect: user.must_change_password ? '/change-password' : (user.is_admin ? '/admin' : '/dashboard')
+                    redirect: redirectUrl
                 });
             });
         });
@@ -375,7 +378,7 @@ app.put('/api/auth/force-password-change', requireAuth, async (req, res) => {
         req.session.mustChangePassword = false;
         req.session.save((err) => {
             console.log('Password changed for user:', req.session.userId);
-            res.json({ success: true, redirect: req.session.isAdmin ? '/admin' : '/dashboard' });
+            res.json({ success: true, redirect: '/' });
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
