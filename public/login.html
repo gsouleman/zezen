@@ -25,13 +25,14 @@
                 <form id="login-form" class="auth-form">
                     <div class="form-group">
                         <label for="username">Username or Email</label>
-                        <input type="text" id="username" name="username" required placeholder="Enter username or email">
+                        <input type="text" id="username" name="username" required placeholder="Enter username or email" autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required placeholder="Enter password">
+                        <input type="password" id="password" name="password" required placeholder="Enter password" autocomplete="current-password">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-full">
+                    <div id="error-message" class="error-message" style="display:none;"></div>
+                    <button type="submit" id="submit-btn" class="btn btn-primary btn-full">
                         <span>Sign In</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -63,79 +64,115 @@
     
     <div id="toast" class="toast"></div>
     
+    <style>
+        .error-message {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    </style>
+    
     <script>
-        // Check if already logged in
-        fetch('/api/auth/status', { credentials: 'include' })
-            .then(res => res.json())
-            .then(data => {
+        const form = document.getElementById('login-form');
+        const btn = document.getElementById('submit-btn');
+        const errorDiv = document.getElementById('error-message');
+        
+        // Check if already logged in on page load
+        checkAuthStatus();
+        
+        async function checkAuthStatus() {
+            try {
+                const res = await fetch('/api/auth/status', { 
+                    method: 'GET',
+                    credentials: 'same-origin'
+                });
+                const data = await res.json();
                 console.log('Auth status:', data);
+                
                 if (data.authenticated) {
                     if (data.mustChangePassword) {
-                        window.location.replace('/change-password');
+                        window.location.href = '/change-password';
                     } else if (data.isAdmin) {
-                        window.location.replace('/admin');
+                        window.location.href = '/admin';
                     } else {
-                        window.location.replace('/dashboard');
+                        window.location.href = '/dashboard';
                     }
                 }
-            })
-            .catch(err => console.error('Auth status error:', err));
-
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            } catch (err) {
+                console.log('Auth check error:', err);
+            }
+        }
+        
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.disabled = true;
-            btn.innerHTML = '<span>Signing in...</span>';
-            
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
+            if (!username || !password) {
+                showError('Please enter username and password');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span>Signing in...</span>';
+            errorDiv.style.display = 'none';
+            
             try {
+                console.log('Attempting login for:', username);
+                
                 const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
+                    credentials: 'same-origin',
                     body: JSON.stringify({ username, password })
                 });
                 
                 const data = await res.json();
                 console.log('Login response:', data);
                 
-                if (res.ok) {
+                if (res.ok && data.success) {
                     showToast('Login successful! Redirecting...', 'success');
                     
-                    // Small delay to ensure session cookie is set
+                    const redirectUrl = data.redirect || '/dashboard';
+                    console.log('Redirecting to:', redirectUrl);
+                    
                     setTimeout(() => {
-                        // Force redirect based on user status
-                        if (data.user.must_change_password) {
-                            console.log('Redirecting to change-password');
-                            window.location.href = '/change-password';
-                        } else if (data.user.is_admin) {
-                            console.log('Redirecting to admin');
-                            window.location.href = '/admin';
-                        } else {
-                            console.log('Redirecting to dashboard');
-                            window.location.href = '/dashboard';
-                        }
-                    }, 300);
+                        window.location.href = redirectUrl;
+                    }, 500);
                 } else {
-                    showToast(data.error || 'Login failed', 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>Sign In</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+                    showError(data.error || 'Login failed');
+                    resetButton();
                 }
             } catch (err) {
                 console.error('Login error:', err);
-                showToast('Connection error', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<span>Sign In</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+                showError('Connection error. Please try again.');
+                resetButton();
             }
         });
-
+        
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        function resetButton() {
+            btn.disabled = false;
+            btn.innerHTML = '<span>Sign In</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        }
+        
         function showToast(message, type) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = `toast ${type} show`;
+            toast.className = 'toast ' + type + ' show';
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
     </script>
