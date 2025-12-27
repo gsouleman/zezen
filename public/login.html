@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Debts & Outstanding Rights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="brand">
+                <a href="/" class="logo">
+                    <span class="logo-mark">G</span>
+                    <span class="logo-text">GHOUENZEN</span>
+                </a>
+            </div>
+            <div class="auth-content">
+                <h1>Welcome Back</h1>
+                <p>Sign in to manage your debts and outstanding rights</p>
+                
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="username">Username or Email</label>
+                        <input type="text" id="username" name="username" required placeholder="Enter username or email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <span>Sign In</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Contact admin for account creation</p>
+                </div>
+            </div>
+        </div>
+        <div class="auth-right">
+            <div class="auth-visual">
+                <div class="visual-content">
+                    <div class="icon">📊</div>
+                    <h2>Manage Your Finances</h2>
+                    <p>Track debts, outstanding rights, and payments all in one place</p>
+                    <ul class="features">
+                        <li>✓ Track who you owe</li>
+                        <li>✓ Track who owes you</li>
+                        <li>✓ Record payments</li>
+                        <li>✓ Generate statements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast"></div>
+    
+    <script>
+        // Check if already logged in
+        fetch('/api/auth/status')
+            .then(res => res.json())
+            .then(data => {
+                if (data.authenticated) {
+                    if (data.mustChangePassword) {
+                        window.location.href = '/change-password';
+                    } else if (data.isAdmin) {
+                        window.location.href = '/admin';
+                    } else {
+                        window.location.href = '/dashboard';
+                    }
+                }
+            });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    showToast('Login successful!', 'success');
+                    
+                    // Check if password change is required
+                    if (data.user.must_change_password) {
+                        setTimeout(() => window.location.href = '/change-password', 500);
+                    } else if (data.user.is_admin) {
+                        setTimeout(() => window.location.href = '/admin', 500);
+                    } else {
+                        setTimeout(() => window.location.href = '/dashboard', 500);
+                    }
+                } else {
+                    showToast(data.error || 'Login failed', 'error');
+                }
+            } catch (err) {
+                showToast('Connection error', 'error');
+            }
+        });
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

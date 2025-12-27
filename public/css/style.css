@@ -168,6 +168,16 @@ body {
     background: rgba(100, 255, 218, 0.1);
 }
 
+.nav-login {
+    background: var(--accent);
+    color: var(--primary);
+    margin-left: 0.5rem;
+}
+
+.nav-login:hover {
+    background: var(--text-bright);
+}
+
 /* ============================================
    HERO SECTION
    ============================================ */

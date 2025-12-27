@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Debts & Outstanding Rights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">
+                <span class="logo-mark">G</span>
+                <span class="logo-text">GHOUENZEN</span>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-section="overview">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                <span>Overview</span>
+            </a>
+            <a href="#" class="nav-item" data-section="creditors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Creditors (I Owe)</span>
+            </a>
+            <a href="#" class="nav-item" data-section="debtors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Debtors (Owe Me)</span>
+            </a>
+            <a href="#" class="nav-item" data-section="payments">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                    <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+                <span>Payments</span>
+            </a>
+            <a href="#" class="nav-item" data-section="profile">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Profile</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <button id="logout-btn" class="logout-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="main-header">
+            <div class="header-left">
+                <h1 id="page-title">Overview</h1>
+                <p id="page-subtitle">Welcome back, <span id="user-name">User</span></p>
+            </div>
+            <div class="header-right">
+                <span class="date" id="current-date"></span>
+            </div>
+        </header>
+
+        <!-- Overview Section -->
+        <section id="section-overview" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">I Owe (Creditors)</span>
+                        <span class="stat-value" id="stat-creditors">0 XAF</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Owed To Me (Debtors)</span>
+                        <span class="stat-value" id="stat-debtors">0 XAF</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+                            <line x1="12" y1="18" x2="12" y2="6"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Net Position</span>
+                        <span class="stat-value" id="stat-net">0 XAF</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Contacts</span>
+                        <span class="stat-value" id="stat-contacts">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Creditors</h3>
+                        <a href="#" class="view-all" data-section="creditors">View All →</a>
+                    </div>
+                    <div class="card-body" id="recent-creditors">
+                        <p class="empty-state">No creditors yet</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Debtors</h3>
+                        <a href="#" class="view-all" data-section="debtors">View All →</a>
+                    </div>
+                    <div class="card-body" id="recent-debtors">
+                        <p class="empty-state">No debtors yet</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Creditors Section -->
+        <section id="section-creditors" class="section">
+            <div class="section-header">
+                <h2>Creditors (People I Owe)</h2>
+                <button class="btn btn-primary" onclick="openModal('creditor')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Add Creditor
+                </button>
+            </div>
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Total Owed</th>
+                            <th>Pending</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="creditors-table">
+                        <tr><td colspan="5" class="empty-state">No creditors found</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Debtors Section -->
+        <section id="section-debtors" class="section">
+            <div class="section-header">
+                <h2>Debtors (People Who Owe Me)</h2>
+                <button class="btn btn-primary" onclick="openModal('debtor')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Add Debtor
+                </button>
+            </div>
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Total Owed</th>
+                            <th>Pending</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="debtors-table">
+                        <tr><td colspan="5" class="empty-state">No debtors found</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Payments Section -->
+        <section id="section-payments" class="section">
+            <div class="section-header">
+                <h2>Payment History</h2>
+                <button class="btn btn-primary" onclick="openModal('payment')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Record Payment
+                </button>
+            </div>
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Reference</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payments-table">
+                        <tr><td colspan="6" class="empty-state">No payments recorded</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="section-profile" class="section">
+            <div class="profile-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Profile Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="profile-form" class="form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profile-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="tel" id="profile-phone">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" id="profile-address">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Change Password</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="password-form" class="form">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="current-password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="new-password" required minlength="6">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Dynamic form content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Statement Modal -->
+    <div id="statement-modal" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3>Statement</h3>
+                <div class="modal-actions">
+                    <button class="btn btn-outline" onclick="printStatement()">Print</button>
+                    <button class="modal-close" onclick="closeStatementModal()">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body" id="statement-content">
+                <!-- Statement content -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

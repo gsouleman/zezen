@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Debts & Outstanding Rights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <style>
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .admin-header h1 { font-size: 1.75rem; color: var(--text-bright); }
+        .user-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .user-info h3 { color: var(--text-bright); margin-bottom: 0.25rem; }
+        .user-info p { color: var(--text-light); font-size: 0.9rem; }
+        .user-badges { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .badge-admin { background: rgba(244, 185, 66, 0.2); color: var(--warning); }
+        .badge-user { background: rgba(100, 255, 218, 0.2); color: var(--accent); }
+        .badge-change-pwd { background: rgba(255, 107, 107, 0.2); color: var(--error); }
+        .user-actions { display: flex; gap: 0.5rem; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo"><span class="logo-mark">G</span><span class="logo-text">GHOUENZEN</span></a>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/admin" class="nav-item active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <span>User Management</span>
+            </a>
+            <a href="/dashboard" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                <span>Dashboard</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <button id="logout-btn" class="logout-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="admin-header">
+            <div><h1>👤 User Management</h1><p style="color: var(--text-light)">Manage system users and access</p></div>
+            <button class="btn btn-primary" onclick="openUserModal()">+ Add User</button>
+        </div>
+        <div id="users-container"><p class="empty-state">Loading users...</p></div>
+    </main>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="modal-title">Add User</h3><button class="modal-close" onclick="closeModal()">&times;</button></div>
+            <div class="modal-body">
+                <form id="user-form" class="form">
+                    <input type="hidden" id="user-id">
+                    <div class="form-row">
+                        <div class="form-group"><label>Username *</label><input type="text" id="f-username" required></div>
+                        <div class="form-group"><label>Email *</label><input type="email" id="f-email" required></div>
+                    </div>
+                    <div class="form-group"><label>Full Name *</label><input type="text" id="f-fullname" required></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Phone</label><input type="text" id="f-phone"></div>
+                        <div class="form-group" id="password-group"><label>Password *</label><input type="password" id="f-password" minlength="5"></div>
+                    </div>
+                    <div class="form-group"><label>Address</label><input type="text" id="f-address"></div>
+                    <div class="form-group"><label style="display: flex; align-items: center; gap: 0.5rem;"><input type="checkbox" id="f-admin" style="width: auto;"><span>Admin User</span></label></div>
+                    <button type="submit" class="btn btn-primary">Save User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let users = [];
+        
+        fetch('/api/auth/status').then(r => r.json()).then(data => {
+            if (!data.authenticated) window.location.href = '/login';
+            else if (data.mustChangePassword) window.location.href = '/change-password';
+            else if (!data.isAdmin) window.location.href = '/dashboard';
+            else loadUsers();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/login';
+        });
+
+        async function loadUsers() {
+            const res = await fetch('/api/admin/users');
+            if (res.status === 403) { window.location.href = '/dashboard'; return; }
+            users = await res.json();
+            renderUsers();
+        }
+
+        function renderUsers() {
+            const c = document.getElementById('users-container');
+            if (!users.length) { c.innerHTML = '<p class="empty-state">No users</p>'; return; }
+            c.innerHTML = users.map(u => `
+                <div class="user-card">
+                    <div class="user-info">
+                        <h3>${u.full_name}</h3>
+                        <p>@${u.username} • ${u.email}</p>
+                        <div class="user-badges">
+                            ${u.is_admin ? '<span class="badge badge-admin">Admin</span>' : '<span class="badge badge-user">User</span>'}
+                            ${u.must_change_password ? '<span class="badge badge-change-pwd">Must Change Password</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="action-btn edit" onclick="editUser(${u.id})">Edit</button>
+                        <button class="action-btn view" onclick="resetPassword(${u.id})">Reset Password</button>
+                        <button class="action-btn delete" onclick="deleteUser(${u.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openUserModal(user = null) {
+            document.getElementById('modal-title').textContent = user ? 'Edit User' : 'Add User';
+            document.getElementById('user-id').value = user?.id || '';
+            document.getElementById('f-username').value = user?.username || '';
+            document.getElementById('f-username').disabled = !!user;
+            document.getElementById('f-email').value = user?.email || '';
+            document.getElementById('f-fullname').value = user?.full_name || '';
+            document.getElementById('f-phone').value = user?.phone || '';
+            document.getElementById('f-address').value = user?.address || '';
+            document.getElementById('f-admin').checked = user?.is_admin || false;
+            document.getElementById('f-password').value = '';
+            document.getElementById('password-group').style.display = user ? 'none' : 'block';
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('modal').classList.remove('active'); }
+
+        function editUser(id) { openUserModal(users.find(u => u.id === id)); }
+
+        async function resetPassword(id) {
+            if (!confirm('Reset password to "12345"? User will need to change it on next login.')) return;
+            const res = await fetch(`/api/admin/users/${id}/reset-password`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+            if (res.ok) { showToast('Password reset to 12345', 'success'); loadUsers(); }
+            else showToast('Error resetting password', 'error');
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Delete this user? This cannot be undone.')) return;
+            const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (res.ok) { showToast('User deleted', 'success'); loadUsers(); }
+            else showToast(data.error || 'Error deleting user', 'error');
+        }
+
+        document.getElementById('user-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('user-id').value;
+            const data = {
+                username: document.getElementById('f-username').value,
+                email: document.getElementById('f-email').value,
+                full_name: document.getElementById('f-fullname').value,
+                phone: document.getElementById('f-phone').value,
+                address: document.getElementById('f-address').value,
+                is_admin: document.getElementById('f-admin').checked
+            };
+            if (!id) data.password = document.getElementById('f-password').value || '12345';
+            
+            const res = await fetch(id ? `/api/admin/users/${id}` : '/api/admin/users', {
+                method: id ? 'PUT' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if (res.ok) { showToast(id ? 'User updated!' : 'User created!', 'success'); closeModal(); loadUsers(); }
+            else showToast(result.error || 'Error', 'error');
+        });
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.className = `toast ${type} show`;
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
