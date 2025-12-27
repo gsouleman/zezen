@@ -80,7 +80,11 @@
     <script>
         let users = [];
         
-        fetch('/api/auth/status').then(r => r.json()).then(data => {
+        // Helper for fetch with credentials
+        const apiFetch = (url, options = {}) => fetch(url, { credentials: 'include', ...options });
+        
+        apiFetch('/api/auth/status').then(r => r.json()).then(data => {
+            console.log('Admin auth status:', data);
             if (!data.authenticated) window.location.href = '/login';
             else if (data.mustChangePassword) window.location.href = '/change-password';
             else if (!data.isAdmin) window.location.href = '/dashboard';
@@ -88,12 +92,12 @@
         });
 
         document.getElementById('logout-btn').addEventListener('click', async () => {
-            await fetch('/api/auth/logout', { method: 'POST' });
+            await apiFetch('/api/auth/logout', { method: 'POST' });
             window.location.href = '/login';
         });
 
         async function loadUsers() {
-            const res = await fetch('/api/admin/users');
+            const res = await apiFetch('/api/admin/users');
             if (res.status === 403) { window.location.href = '/dashboard'; return; }
             users = await res.json();
             renderUsers();
@@ -142,14 +146,14 @@
 
         async function resetPassword(id) {
             if (!confirm('Reset password to "12345"? User will need to change it on next login.')) return;
-            const res = await fetch(`/api/admin/users/${id}/reset-password`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+            const res = await apiFetch(`/api/admin/users/${id}/reset-password`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
             if (res.ok) { showToast('Password reset to 12345', 'success'); loadUsers(); }
             else showToast('Error resetting password', 'error');
         }
 
         async function deleteUser(id) {
             if (!confirm('Delete this user? This cannot be undone.')) return;
-            const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+            const res = await apiFetch(`/api/admin/users/${id}`, { method: 'DELETE' });
             const data = await res.json();
             if (res.ok) { showToast('User deleted', 'success'); loadUsers(); }
             else showToast(data.error || 'Error deleting user', 'error');
@@ -168,7 +172,7 @@
             };
             if (!id) data.password = document.getElementById('f-password').value || '12345';
             
-            const res = await fetch(id ? `/api/admin/users/${id}` : '/api/admin/users', {
+            const res = await apiFetch(id ? `/api/admin/users/${id}` : '/api/admin/users', {
                 method: id ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)

@@ -5,14 +5,40 @@ let debtors = [];
 let payments = [];
 let currentUser = null;
 
+// Helper function for fetch with credentials
+async function apiFetch(url, options = {}) {
+    const defaultOptions = {
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    };
+    return fetch(url, { ...defaultOptions, ...options });
+}
+
 // ============================================
 // INITIALIZATION
 // ============================================
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Check authentication
-    const authStatus = await fetch('/api/auth/status').then(r => r.json());
-    if (!authStatus.authenticated) {
+    try {
+        const authRes = await apiFetch('/api/auth/status');
+        const authStatus = await authRes.json();
+        console.log('Dashboard auth status:', authStatus);
+        
+        if (!authStatus.authenticated) {
+            window.location.href = '/login';
+            return;
+        }
+        
+        if (authStatus.mustChangePassword) {
+            window.location.href = '/change-password';
+            return;
+        }
+    } catch (err) {
+        console.error('Auth check failed:', err);
         window.location.href = '/login';
         return;
     }
@@ -105,7 +131,8 @@ async function loadDashboardData() {
 
 async function loadStats() {
     try {
-        const stats = await fetch('/api/dashboard/stats').then(r => r.json());
+        const res = await apiFetch('/api/dashboard/stats');
+        const stats = await res.json();
         
         document.getElementById('stat-creditors').textContent = formatCurrency(stats.total_owed_to_creditors);
         document.getElementById('stat-debtors').textContent = formatCurrency(stats.total_owed_by_debtors);
@@ -118,7 +145,8 @@ async function loadStats() {
 
 async function loadCreditors() {
     try {
-        creditors = await fetch('/api/creditors').then(r => r.json());
+        const res = await apiFetch('/api/creditors');
+        creditors = await res.json();
         renderCreditorsTable();
         renderRecentCreditors();
     } catch (err) {
@@ -128,7 +156,8 @@ async function loadCreditors() {
 
 async function loadDebtors() {
     try {
-        debtors = await fetch('/api/debtors').then(r => r.json());
+        const res = await apiFetch('/api/debtors');
+        debtors = await res.json();
         renderDebtorsTable();
         renderRecentDebtors();
     } catch (err) {
@@ -138,7 +167,8 @@ async function loadDebtors() {
 
 async function loadPayments() {
     try {
-        payments = await fetch('/api/payments').then(r => r.json());
+        const res = await apiFetch('/api/payments');
+        payments = await res.json();
         renderPaymentsTable();
     } catch (err) {
         console.error('Error loading payments:', err);
@@ -147,7 +177,8 @@ async function loadPayments() {
 
 async function loadProfile() {
     try {
-        currentUser = await fetch('/api/auth/profile').then(r => r.json());
+        const res = await apiFetch('/api/auth/profile');
+        currentUser = await res.json();
         document.getElementById('user-name').textContent = currentUser.full_name;
         document.getElementById('profile-name').value = currentUser.full_name;
         document.getElementById('profile-phone').value = currentUser.phone || '';

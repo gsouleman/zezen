@@ -10,31 +10,16 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Debug: Log all environment variables (masked)
-console.log('==========================================');
-console.log('ENVIRONMENT CHECK:');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('PORT:', process.env.PORT);
-console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
-console.log('DATABASE_URL length:', process.env.DATABASE_URL ? process.env.DATABASE_URL.length : 0);
-if (process.env.DATABASE_URL) {
-    const masked = process.env.DATABASE_URL.substring(0, 20) + '...[MASKED]';
-    console.log('DATABASE_URL preview:', masked);
-}
-console.log('==========================================');
-
 // Check for DATABASE_URL
 if (!process.env.DATABASE_URL) {
     console.error('==========================================');
     console.error('ERROR: DATABASE_URL environment variable is not set!');
     console.error('==========================================');
-    console.error('Please set DATABASE_URL in your Render environment variables.');
-    console.error('Go to: Render Dashboard → Your Web Service → Environment → Add DATABASE_URL');
-    console.error('==========================================');
     process.exit(1);
 }
 
-console.log('DATABASE_URL is set, attempting connection...');
+console.log('Starting server...');
+console.log('NODE_ENV:', process.env.NODE_ENV);
 
 // PostgreSQL Connection
 const pool = new Pool({
@@ -51,13 +36,19 @@ pool.on('error', (err) => {
     console.error('PostgreSQL pool error:', err);
 });
 
+// Trust proxy for Render (important for secure cookies behind proxy)
+app.set('trust proxy', 1);
+
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Session configuration
-app.use(session({
+// Session configuration - fixed for Render
+const sessionConfig = {
     store: new pgSession({
         pool: pool,
         tableName: 'user_sessions',
@@ -66,12 +57,29 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'ghouenzen-secret-key-2025',
     resave: false,
     saveUninitialized: false,
+    name: 'ghouenzen.sid',
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        sameSite: 'lax'
     }
-}));
+};
+
+// In production on Render, use secure cookies
+if (process.env.NODE_ENV === 'production') {
+    sessionConfig.cookie.secure = true;
+}
+
+app.use(session(sessionConfig));
+
+// Debug middleware to log session info
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api/auth')) {
+        console.log(`[${req.method}] ${req.path} - Session ID: ${req.sessionID ? req.sessionID.substring(0, 8) + '...' : 'none'}`);
+        console.log('Session userId:', req.session?.userId);
+    }
+    next();
+});
 
 // Initialize Database
 async function initDB() {
@@ -255,6 +263,7 @@ function requireAdmin(req, res, next) {
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { username, password } = req.body;
+        console.log('Login attempt for:', username);
 
         if (!username || !password) {
             return res.status(400).json({ error: 'Username and password are required' });
@@ -267,6 +276,7 @@ app.post('/api/auth/login', async (req, res) => {
         );
 
         if (result.rows.length === 0) {
+            console.log('User not found:', username);
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
@@ -275,27 +285,38 @@ app.post('/api/auth/login', async (req, res) => {
         // Verify password
         const isValid = await bcrypt.compare(password, user.password_hash);
         if (!isValid) {
+            console.log('Invalid password for:', username);
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         // Update last login
         await pool.query('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
 
-        // Set session
+        // Set session data
         req.session.userId = user.id;
         req.session.username = user.username;
         req.session.isAdmin = user.is_admin;
 
-        res.json({ 
-            message: 'Login successful', 
-            user: { 
-                id: user.id, 
-                username: user.username, 
-                full_name: user.full_name, 
-                email: user.email,
-                is_admin: user.is_admin,
-                must_change_password: user.must_change_password
-            } 
+        // Explicitly save session before responding
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).json({ error: 'Session error' });
+            }
+            
+            console.log('Login successful for:', username, '- Session saved, userId:', user.id);
+            
+            res.json({ 
+                message: 'Login successful', 
+                user: { 
+                    id: user.id, 
+                    username: user.username, 
+                    full_name: user.full_name, 
+                    email: user.email,
+                    is_admin: user.is_admin,
+                    must_change_password: user.must_change_password
+                } 
+            });
         });
     } catch (err) {
         console.error('Login error:', err);

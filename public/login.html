@@ -65,7 +65,7 @@
     
     <script>
         // Check if already logged in
-        fetch('/api/auth/status')
+        fetch('/api/auth/status', { credentials: 'include' })
             .then(res => res.json())
             .then(data => {
                 console.log('Auth status:', data);
@@ -78,7 +78,8 @@
                         window.location.replace('/dashboard');
                     }
                 }
-            });
+            })
+            .catch(err => console.error('Auth status error:', err));
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -94,6 +95,7 @@
                 const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ username, password })
                 });
                 
@@ -103,17 +105,20 @@
                 if (res.ok) {
                     showToast('Login successful! Redirecting...', 'success');
                     
-                    // Force redirect based on user status
-                    if (data.user.must_change_password) {
-                        console.log('Redirecting to change-password');
-                        window.location.replace('/change-password');
-                    } else if (data.user.is_admin) {
-                        console.log('Redirecting to admin');
-                        window.location.replace('/admin');
-                    } else {
-                        console.log('Redirecting to dashboard');
-                        window.location.replace('/dashboard');
-                    }
+                    // Small delay to ensure session cookie is set
+                    setTimeout(() => {
+                        // Force redirect based on user status
+                        if (data.user.must_change_password) {
+                            console.log('Redirecting to change-password');
+                            window.location.href = '/change-password';
+                        } else if (data.user.is_admin) {
+                            console.log('Redirecting to admin');
+                            window.location.href = '/admin';
+                        } else {
+                            console.log('Redirecting to dashboard');
+                            window.location.href = '/dashboard';
+                        }
+                    }, 300);
                 } else {
                     showToast(data.error || 'Login failed', 'error');
                     btn.disabled = false;
