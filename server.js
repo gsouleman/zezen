@@ -10,10 +10,36 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Debug: Log all environment variables (masked)
+console.log('==========================================');
+console.log('ENVIRONMENT CHECK:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PORT:', process.env.PORT);
+console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+console.log('DATABASE_URL length:', process.env.DATABASE_URL ? process.env.DATABASE_URL.length : 0);
+if (process.env.DATABASE_URL) {
+    const masked = process.env.DATABASE_URL.substring(0, 20) + '...[MASKED]';
+    console.log('DATABASE_URL preview:', masked);
+}
+console.log('==========================================');
+
+// Check for DATABASE_URL
+if (!process.env.DATABASE_URL) {
+    console.error('==========================================');
+    console.error('ERROR: DATABASE_URL environment variable is not set!');
+    console.error('==========================================');
+    console.error('Please set DATABASE_URL in your Render environment variables.');
+    console.error('Go to: Render Dashboard → Your Web Service → Environment → Add DATABASE_URL');
+    console.error('==========================================');
+    process.exit(1);
+}
+
+console.log('DATABASE_URL is set, attempting connection...');
+
 // PostgreSQL Connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('render.com') 
+    ssl: process.env.DATABASE_URL.includes('render.com') 
         ? { rejectUnauthorized: false } 
         : false,
     max: 10,
