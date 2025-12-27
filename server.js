@@ -106,7 +106,7 @@ async function initDB() {
         }
 
         // Create default admin account if not exists
-        const adminCheck = await client.query("SELECT id FROM users WHERE username = 'admin'");
+        const adminCheck = await client.query("SELECT id, password_hash FROM users WHERE username = 'admin'");
         if (adminCheck.rows.length === 0) {
             const salt = await bcrypt.genSalt(10);
             const defaultPassword = await bcrypt.hash('12345', salt);
@@ -115,6 +115,15 @@ async function initDB() {
                 VALUES ('admin', 'admin@ghouenzen.com', $1, 'Administrator', TRUE, TRUE)
             `, [defaultPassword]);
             console.log('Default admin account created (username: admin, password: 12345)');
+        } else {
+            // Admin exists - check if password is still default and reset must_change_password
+            const admin = adminCheck.rows[0];
+            const isDefaultPassword = await bcrypt.compare('12345', admin.password_hash);
+            if (isDefaultPassword) {
+                // Reset must_change_password to TRUE if still using default password
+                await client.query(`UPDATE users SET must_change_password = TRUE WHERE username = 'admin'`);
+                console.log('Admin account reset - must change password on next login');
+            }
         }
 
         // Creditors table (people the user owes money to)
@@ -836,15 +845,26 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', async (req, res) => {
     // Require authentication
     if (!req.session || !req.session.userId) {
         return res.redirect('/login');
     }
+    
+    // Check if must change password
+    try {
+        const result = await pool.query('SELECT must_change_password FROM users WHERE id = $1', [req.session.userId]);
+        if (result.rows.length > 0 && result.rows[0].must_change_password) {
+            return res.redirect('/change-password');
+        }
+    } catch (err) {
+        console.error('Error checking password status:', err);
+    }
+    
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-app.get('/admin', (req, res) => {
+app.get('/admin', async (req, res) => {
     // Require admin authentication
     if (!req.session || !req.session.userId) {
         return res.redirect('/login');
@@ -852,14 +872,40 @@ app.get('/admin', (req, res) => {
     if (!req.session.isAdmin) {
         return res.redirect('/dashboard');
     }
+    
+    // Check if must change password
+    try {
+        const result = await pool.query('SELECT must_change_password FROM users WHERE id = $1', [req.session.userId]);
+        if (result.rows.length > 0 && result.rows[0].must_change_password) {
+            return res.redirect('/change-password');
+        }
+    } catch (err) {
+        console.error('Error checking password status:', err);
+    }
+    
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-app.get('/change-password', (req, res) => {
+app.get('/change-password', async (req, res) => {
     // Require authentication
     if (!req.session || !req.session.userId) {
         return res.redirect('/login');
     }
+    
+    // Check if actually needs to change password, if not redirect
+    try {
+        const result = await pool.query('SELECT must_change_password FROM users WHERE id = $1', [req.session.userId]);
+        if (result.rows.length > 0 && !result.rows[0].must_change_password) {
+            // Password already changed, redirect to appropriate page
+            if (req.session.isAdmin) {
+                return res.redirect('/admin');
+            }
+            return res.redirect('/dashboard');
+        }
+    } catch (err) {
+        console.error('Error checking password status:', err);
+    }
+    
     res.sendFile(path.join(__dirname, 'public', 'change-password.html'));
 });
 
