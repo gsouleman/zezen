@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZEZEN Portal | GHOUENZEN Services</title>
+    <title>ZEZEN Portal | GHOUENZEN Business Services</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -16,24 +16,23 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%);
             min-height: 100vh;
-            color: #e2e8f0;
+            color: #1e293b;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1.5rem 2rem;
         }
         
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 3rem;
+            padding: 1rem 0 2rem;
         }
         
         .logo {
@@ -44,34 +43,109 @@
         }
         
         .logo-mark {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border-radius: 12px;
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 1.5rem;
+            font-weight: 800;
+            font-size: 1.75rem;
             color: white;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
         }
         
         .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-outline {
+            background: white;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .btn-outline:hover {
+            border-color: #0ea5e9;
+            color: #0ea5e9;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: white;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        }
+        
+        /* Hero Section */
         .hero {
             text-align: center;
-            padding: 4rem 0;
+            padding: 3rem 0 4rem;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #0ea5e9;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-badge span {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
         }
         
         .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.25rem;
+            color: #0f172a;
+        }
+        
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -79,45 +153,87 @@
         
         .hero p {
             font-size: 1.25rem;
-            color: #94a3b8;
+            color: #64748b;
             max-width: 600px;
-            margin: 0 auto 3rem;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+        
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Apps Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-title p {
+            color: #64748b;
+            font-size: 1rem;
         }
         
         .apps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
         }
         
         .app-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
             padding: 2rem;
             text-decoration: none;
             color: inherit;
             transition: all 0.3s ease;
-            display: block;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
         
         .app-card:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(59, 130, 246, 0.5);
-            transform: translateY(-4px);
+            border-color: #0ea5e9;
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
+            transform: translateY(-6px);
         }
         
         .app-card.featured {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
-            border-color: rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            border: none;
+            color: white;
+        }
+        
+        .app-card.featured:hover {
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.4);
+        }
+        
+        .app-card.featured .app-card-desc {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .app-card.featured .app-badge {
+            background: rgba(255,255,255,0.2);
+            color: white;
         }
         
         .app-icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border-radius: 16px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -125,107 +241,253 @@
             margin-bottom: 1.5rem;
         }
         
-        .app-card h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: white;
+        .app-card.featured .app-icon {
+            background: rgba(255,255,255,0.2);
         }
         
-        .app-card p {
-            color: #94a3b8;
+        .app-card h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .app-card-desc {
+            color: #64748b;
             font-size: 0.95rem;
-            line-height: 1.6;
+            line-height: 1.7;
+            flex-grow: 1;
+            margin-bottom: 1.25rem;
         }
         
         .app-badge {
-            display: inline-block;
-            background: rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: #f0f9ff;
+            color: #0ea5e9;
+            padding: 0.4rem 0.85rem;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            width: fit-content;
         }
         
-        footer {
+        /* Features Section */
+        .features {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-item {
             text-align: center;
-            padding: 3rem 0;
-            margin-top: 4rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+        
+        .feature-item h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.35rem;
+        }
+        
+        .feature-item p {
+            font-size: 0.875rem;
             color: #64748b;
         }
         
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        footer p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        footer .footer-links {
+            margin-top: 0.75rem;
+        }
+        
         footer a {
-            color: #60a5fa;
+            color: #0ea5e9;
             text-decoration: none;
+            font-weight: 500;
         }
         
         footer a:hover {
             text-decoration: underline;
         }
         
+        /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.25rem;
             }
             
             .hero p {
                 font-size: 1rem;
             }
             
+            .header-actions .btn span {
+                display: none;
+            }
+            
             .apps-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .features {
+                padding: 2rem 1.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header with Admin Login on Right -->
         <header>
             <a href="/" class="logo">
                 <span class="logo-mark">Z</span>
                 <span class="logo-text">ZEZEN</span>
             </a>
+            <div class="header-actions">
+                <a href="/admin" class="btn btn-outline">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                    </svg>
+                    <span>Admin</span>
+                </a>
+                <a href="/login" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    <span>Login</span>
+                </a>
+            </div>
         </header>
         
+        <!-- Hero Section -->
         <section class="hero">
-            <h1>GHOUENZEN Services Portal</h1>
-            <p>Access all your business management applications from one central location</p>
+            <div class="hero-badge">
+                <span>NEW</span>
+                Comprehensive Business Management Suite
+            </div>
+            <h1>Your Business, <span class="highlight">Simplified</span></h1>
+            <p>Access powerful tools to manage your finances, properties, and business operations all from one centralized portal.</p>
+            <div class="hero-cta">
+                <a href="/login" class="btn btn-primary">
+                    Get Started
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#apps" class="btn btn-outline">Explore Apps</a>
+            </div>
         </section>
         
-        <section class="apps-grid">
-            <!-- Debts and Outstanding Rights - Requires Login -->
-            <a href="/login" class="app-card featured">
-                <div class="app-icon">📊</div>
-                <h3>Debts & Outstanding Rights</h3>
-                <p>Track creditors, debtors, payments, and generate bilingual statements. Comprehensive financial management system.</p>
-                <span class="app-badge">🔒 Login Required</span>
-            </a>
+        <!-- Apps Section -->
+        <section id="apps">
+            <div class="section-title">
+                <h2>Business Applications</h2>
+                <p>Choose the tool that fits your needs</p>
+            </div>
             
-            <!-- Estate Management - External Link -->
-            <a href="https://campost-biling.onrender.com" target="_blank" class="app-card">
-                <div class="app-icon">🏠</div>
-                <h3>Estate Management</h3>
-                <p>CAMPOST Mankon billing and property management system. Manage tenants, invoices, and property records.</p>
-                <span class="app-badge">External App</span>
-            </a>
-            
-            <!-- Admin Panel - For Admins -->
-            <a href="/admin" class="app-card">
-                <div class="app-icon">⚙️</div>
-                <h3>Admin Panel</h3>
-                <p>Manage users, reset passwords, and configure system settings. Admin access only.</p>
-                <span class="app-badge">🔒 Admin Only</span>
-            </a>
+            <div class="apps-grid">
+                <!-- Debts and Outstanding Rights - Featured -->
+                <a href="/login" class="app-card featured">
+                    <div class="app-icon">📊</div>
+                    <h3>Debts & Outstanding Rights</h3>
+                    <p class="app-card-desc">Track creditors, debtors, payments, and generate professional bilingual statements. Complete financial management system for your business.</p>
+                    <span class="app-badge">🔒 Login Required</span>
+                </a>
+                
+                <!-- Estate Management -->
+                <a href="https://campost-biling.onrender.com" target="_blank" class="app-card">
+                    <div class="app-icon">🏠</div>
+                    <h3>Estate Management</h3>
+                    <p class="app-card-desc">CAMPOST Mankon billing and property management. Manage tenants, generate invoices, and track property records efficiently.</p>
+                    <span class="app-badge">🔗 External App</span>
+                </a>
+                
+                <!-- More Apps Coming Soon -->
+                <a href="#" class="app-card" style="pointer-events: none; opacity: 0.7;">
+                    <div class="app-icon">🚀</div>
+                    <h3>More Coming Soon</h3>
+                    <p class="app-card-desc">We're working on additional tools to help streamline your business operations. Stay tuned for updates!</p>
+                    <span class="app-badge">⏳ Coming Soon</span>
+                </a>
+            </div>
         </section>
         
+        <!-- Features Section -->
+        <section class="features">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🔐</div>
+                    <h4>Secure Access</h4>
+                    <p>Protected login system</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <h4>Mobile Friendly</h4>
+                    <p>Access from any device</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🌍</div>
+                    <h4>Bilingual Support</h4>
+                    <p>English & French</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📈</div>
+                    <h4>Real-time Data</h4>
+                    <p>Always up to date</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💾</div>
+                    <h4>Cloud Storage</h4>
+                    <p>Data backed up safely</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
         <footer>
-            <p>&copy; 2025 GHOUENZEN Services. All rights reserved.</p>
-            <p style="margin-top: 0.5rem;">
+            <p>&copy; 2025 GHOUENZEN Business Services. All rights reserved.</p>
+            <p class="footer-links">
                 <a href="/login">Login</a> · 
-                <a href="/admin">Admin</a>
+                <a href="/admin">Admin Panel</a> · 
+                <a href="https://campost-biling.onrender.com" target="_blank">Estate Management</a>
             </p>
         </footer>
     </div>
