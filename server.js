@@ -263,8 +263,8 @@ app.post('/api/auth/login', async (req, res) => {
 
                 console.log('Login successful:', username, 'Session:', req.sessionID?.substring(0, 8));
                 
-                // After password change, redirect to main site
-                const redirectUrl = user.must_change_password ? '/change-password' : '/';
+                // After login: if password change needed, stay on this site; otherwise redirect to main app
+                const redirectUrl = user.must_change_password ? '/change-password' : 'https://ghouenzen.onrender.com';
                 
                 res.json({
                     success: true,
@@ -378,7 +378,8 @@ app.put('/api/auth/force-password-change', requireAuth, async (req, res) => {
         req.session.mustChangePassword = false;
         req.session.save((err) => {
             console.log('Password changed for user:', req.session.userId);
-            res.json({ success: true, redirect: '/' });
+            // Redirect to main app after password change
+            res.json({ success: true, redirect: 'https://ghouenzen.onrender.com' });
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -601,7 +602,7 @@ app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'log
 app.get('/change-password', (req, res) => { if (!req.session?.userId) return res.redirect('/login'); res.sendFile(path.join(__dirname, 'public', 'change-password.html')); });
 app.get('/dashboard', (req, res) => { if (!req.session?.userId) return res.redirect('/login'); if (req.session.mustChangePassword) return res.redirect('/change-password'); res.sendFile(path.join(__dirname, 'public', 'dashboard.html')); });
 app.get('/admin', (req, res) => { if (!req.session?.userId) return res.redirect('/login'); if (req.session.mustChangePassword) return res.redirect('/change-password'); if (!req.session.isAdmin) return res.redirect('/dashboard'); res.sendFile(path.join(__dirname, 'public', 'admin.html')); });
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/', (req, res) => res.redirect('/login'));
 
 // Start
 initDB().then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`))).catch(err => { console.error('Failed:', err); process.exit(1); });

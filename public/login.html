@@ -14,8 +14,8 @@
         <div class="auth-left">
             <div class="brand">
                 <a href="/" class="logo">
-                    <span class="logo-mark">G</span>
-                    <span class="logo-text">GHOUENZEN</span>
+                    <span class="logo-mark">Z</span>
+                    <span class="logo-text">ZEZEN</span>
                 </a>
             </div>
             <div class="auth-content">
@@ -85,30 +85,7 @@
         const btn = document.getElementById('submit-btn');
         const errorDiv = document.getElementById('error-message');
         
-        // Check if already logged in on page load
-        checkAuthStatus();
-        
-        async function checkAuthStatus() {
-            try {
-                const res = await fetch('/api/auth/status', { 
-                    method: 'GET',
-                    credentials: 'same-origin'
-                });
-                const data = await res.json();
-                console.log('Auth status:', data);
-                
-                if (data.authenticated) {
-                    if (data.mustChangePassword) {
-                        window.location.href = '/change-password';
-                    } else {
-                        // Redirect to main site
-                        window.location.href = '/';
-                    }
-                }
-            } catch (err) {
-                console.log('Auth check error:', err);
-            }
-        }
+        // NO auto-redirect on page load - user must login first
         
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -141,12 +118,17 @@
                 if (res.ok && data.success) {
                     showToast('Login successful! Redirecting...', 'success');
                     
-                    const redirectUrl = data.redirect || '/dashboard';
-                    console.log('Redirecting to:', redirectUrl);
-                    
-                    setTimeout(() => {
-                        window.location.href = redirectUrl;
-                    }, 500);
+                    // Check if password change is required
+                    if (data.user && data.user.must_change_password) {
+                        setTimeout(() => {
+                            window.location.href = '/change-password';
+                        }, 500);
+                    } else {
+                        // Redirect to main app (ghouenzen.onrender.com)
+                        setTimeout(() => {
+                            window.location.href = 'https://ghouenzen.onrender.com';
+                        }, 500);
+                    }
                 } else {
                     showError(data.error || 'Login failed');
                     resetButton();

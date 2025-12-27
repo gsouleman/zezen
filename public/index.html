@@ -3,497 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GHOUENZEN SOULEMANOU | Business & Technology Solutions</title>
+    <title>ZEZEN Portal | GHOUENZEN Services</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        
+        .logo-mark {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .app-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .app-card:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-4px);
+        }
+        
+        .app-card.featured {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .app-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .app-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .app-badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #64748b;
+        }
+        
+        footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
+    <div class="container">
+        <header>
             <a href="/" class="logo">
-                <span class="logo-mark">G</span>
-                <div class="logo-text">
-                    <span class="logo-name">GHOUENZEN</span>
-                    <span class="logo-tagline">Solutions</span>
-                </div>
+                <span class="logo-mark">Z</span>
+                <span class="logo-text">ZEZEN</span>
             </a>
-            <div class="nav-menu">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#expertise" class="nav-link">Expertise</a>
-                <a href="#applications" class="nav-link">Applications</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </div>
-            <a href="#contact" class="nav-cta">Get In Touch</a>
-            <a href="/login" class="nav-cta nav-login">Login</a>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="hero" id="home">
-        <div class="hero-background">
-            <div class="hero-gradient"></div>
-            <div class="hero-grid"></div>
-        </div>
-        <div class="hero-container">
-            <div class="hero-content">
-                <div class="hero-intro">
-                    <span class="intro-line"></span>
-                    <span class="intro-text">Welcome to Excellence</span>
-                </div>
-                <h1 class="hero-title">
-                    Transforming Ideas Into
-                    <span class="title-highlight">Digital Reality</span>
-                </h1>
-                <p class="hero-description">
-                    I am <strong>GHOUENZEN SOULEMANOU</strong>, a seasoned professional specializing in 
-                    business automation, property management systems, and enterprise software solutions. 
-                    Based in Douala, Cameroon, I deliver technology that drives efficiency and growth.
-                </p>
-                <div class="hero-actions">
-                    <a href="#applications" class="btn btn-primary">
-                        <span>View Applications</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                    <a href="#about" class="btn btn-ghost">
-                        <span>Learn More</span>
-                    </a>
-                </div>
-                <div class="hero-metrics">
-                    <div class="metric">
-                        <span class="metric-value">30+</span>
-                        <span class="metric-label">Years Experience</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-value">15+</span>
-                        <span class="metric-label">Projects Delivered</span>
-                    </div>
-                    <div class="metric">
-                        <span class="metric-value">100%</span>
-                        <span class="metric-label">Client Satisfaction</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="visual-wrapper">
-                    <div class="visual-card card-1">
-                        <div class="card-icon">📊</div>
-                        <div class="card-text">
-                            <span class="card-title">Analytics</span>
-                            <span class="card-subtitle">Real-time insights</span>
-                        </div>
-                    </div>
-                    <div class="visual-card card-2">
-                        <div class="card-icon">⚡</div>
-                        <div class="card-text">
-                            <span class="card-title">Automation</span>
-                            <span class="card-subtitle">Streamlined workflows</span>
-                        </div>
-                    </div>
-                    <div class="visual-card card-3">
-                        <div class="card-icon">🔒</div>
-                        <div class="card-text">
-                            <span class="card-title">Security</span>
-                            <span class="card-subtitle">Enterprise grade</span>
-                        </div>
-                    </div>
-                    <div class="visual-center">
-                        <div class="center-icon">GS</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- About Section -->
-    <section class="about" id="about">
-        <div class="container">
-            <div class="about-wrapper">
-                <div class="about-image">
-                    <div class="image-container">
-                        <div class="image-badge">
-                            <span class="badge-number">30+</span>
-                            <span class="badge-text">Years of Excellence</span>
-                        </div>
-                        <div class="image-pattern"></div>
-                        <div class="image-content">
-                            <span class="image-initials">GS</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-content">
-                    <div class="section-label">
-                        <span class="label-dot"></span>
-                        <span>About Me</span>
-                    </div>
-                    <h2 class="section-title">Delivering Excellence in Business & Technology</h2>
-                    <p class="about-text">
-                        With over three decades of experience in business operations and technology, 
-                        I have dedicated my career to creating solutions that simplify complex processes 
-                        and drive measurable results.
-                    </p>
-                    <p class="about-text">
-                        My expertise spans property management, financial systems, and custom software 
-                        development. I believe in building tools that not only meet today's needs but 
-                        are designed to scale for tomorrow's challenges.
-                    </p>
-                    <div class="about-highlights">
-                        <div class="highlight">
-                            <div class="highlight-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                            </div>
-                            <div class="highlight-text">
-                                <strong>Proven Track Record</strong>
-                                <span>Successful project delivery across multiple industries</span>
-                            </div>
-                        </div>
-                        <div class="highlight">
-                            <div class="highlight-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                            </div>
-                            <div class="highlight-text">
-                                <strong>Client-Centric Approach</strong>
-                                <span>Solutions tailored to your specific requirements</span>
-                            </div>
-                        </div>
-                        <div class="highlight">
-                            <div class="highlight-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                            </div>
-                            <div class="highlight-text">
-                                <strong>Continuous Innovation</strong>
-                                <span>Staying ahead with modern technologies</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Expertise Section -->
-    <section class="expertise" id="expertise">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label">
-                    <span class="label-dot"></span>
-                    <span>What I Do</span>
-                </div>
-                <h2 class="section-title">Areas of Expertise</h2>
-                <p class="section-description">
-                    Comprehensive solutions across multiple domains to help businesses thrive
-                </p>
-            </div>
-            <div class="expertise-grid">
-                <div class="expertise-card">
-                    <div class="card-number">01</div>
-                    <div class="card-icon-wrap">
-                        <span class="card-icon">🏢</span>
-                    </div>
-                    <h3>Property Management</h3>
-                    <p>End-to-end property management solutions including tenant relations, lease administration, billing systems, and maintenance coordination.</p>
-                    <ul class="card-list">
-                        <li>Commercial Property Leasing</li>
-                        <li>Rental Billing & Collections</li>
-                        <li>Tenant Communication</li>
-                    </ul>
-                </div>
-                <div class="expertise-card">
-                    <div class="card-number">02</div>
-                    <div class="card-icon-wrap">
-                        <span class="card-icon">⚙️</span>
-                    </div>
-                    <h3>Business Automation</h3>
-                    <p>Streamline operations with custom automation tools that reduce manual work, minimize errors, and increase productivity.</p>
-                    <ul class="card-list">
-                        <li>Workflow Automation</li>
-                        <li>Document Generation</li>
-                        <li>Process Optimization</li>
-                    </ul>
-                </div>
-                <div class="expertise-card">
-                    <div class="card-number">03</div>
-                    <div class="card-icon-wrap">
-                        <span class="card-icon">💻</span>
-                    </div>
-                    <h3>Software Development</h3>
-                    <p>Custom web applications designed to solve specific business challenges with modern, scalable architecture.</p>
-                    <ul class="card-list">
-                        <li>Web Applications</li>
-                        <li>Database Systems</li>
-                        <li>API Integration</li>
-                    </ul>
-                </div>
-                <div class="expertise-card">
-                    <div class="card-number">04</div>
-                    <div class="card-icon-wrap">
-                        <span class="card-icon">📋</span>
-                    </div>
-                    <h3>Compliance & Documentation</h3>
-                    <p>Professional documentation systems and compliance frameworks to meet regulatory requirements and industry standards.</p>
-                    <ul class="card-list">
-                        <li>ISO Compliance</li>
-                        <li>Audit Preparation</li>
-                        <li>Record Management</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Applications Section -->
-    <section class="applications" id="applications">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label">
-                    <span class="label-dot"></span>
-                    <span>My Work</span>
-                </div>
-                <h2 class="section-title">Live Applications</h2>
-                <p class="section-description">
-                    Production-ready applications built to solve real business problems
-                </p>
-            </div>
-            <div class="apps-grid">
-                <!-- Estate Management App -->
-                <a href="https://campost-biling.onrender.com" target="_blank" class="app-card featured">
-                    <div class="app-badge">Live Application</div>
-                    <div class="app-header">
-                        <div class="app-icon">
-                            <span>⚖️</span>
-                        </div>
-                        <div class="app-status">
-                            <span class="status-dot"></span>
-                            <span>Online</span>
-                        </div>
-                    </div>
-                    <div class="app-content">
-                        <h3>Estate Management</h3>
-                        <p>
-                            A comprehensive estate planning and management system featuring Islamic inheritance 
-                            calculations, asset tracking, creditor/debtor management, and professional will 
-                            document generation with multi-language support.
-                        </p>
-                        <div class="app-features">
-                            <div class="feature-tag">Estate Planning</div>
-                            <div class="feature-tag">Inheritance Calculator</div>
-                            <div class="feature-tag">Asset Management</div>
-                            <div class="feature-tag">Debt Tracking</div>
-                            <div class="feature-tag">Will Generation</div>
-                            <div class="feature-tag">Multi-language</div>
-                        </div>
-                    </div>
-                    <div class="app-footer">
-                        <span class="app-link">
-                            Launch Application
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                            </svg>
-                        </span>
-                        <span class="app-url">campost-biling.onrender.com</span>
-                    </div>
-                </a>
-
-                <!-- Debts and Outstanding Rights -->
-                <a href="/login" class="app-card featured">
-                    <div class="app-badge">Live Application</div>
-                    <div class="app-header">
-                        <div class="app-icon">
-                            <span>📋</span>
-                        </div>
-                        <div class="app-status">
-                            <span class="status-dot"></span>
-                            <span>Online</span>
-                        </div>
-                    </div>
-                    <div class="app-content">
-                        <h3>Debts and Outstanding Rights</h3>
-                        <p>
-                            Track and manage debts owed to you and debts you owe to others. 
-                            Generate professional statements, record payments, and maintain 
-                            complete financial records with multi-language support.
-                        </p>
-                        <div class="app-features">
-                            <div class="feature-tag">Creditor Tracking</div>
-                            <div class="feature-tag">Debtor Management</div>
-                            <div class="feature-tag">Payment Records</div>
-                            <div class="feature-tag">Statements</div>
-                        </div>
-                    </div>
-                    <div class="app-footer">
-                        <span class="app-link">
-                            Login to Access
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                            </svg>
-                        </span>
-                        <span class="app-url">Requires Authentication</span>
-                    </div>
-                </a>
-
-                <!-- Coming Soon Apps -->
-                <div class="app-card coming-soon">
-                    <div class="app-badge">Coming Soon</div>
-                    <div class="app-header">
-                        <div class="app-icon">
-                            <span>🏠</span>
-                        </div>
-                    </div>
-                    <div class="app-content">
-                        <h3>Property Billing System</h3>
-                        <p>
-                            Advanced rental property management with automated billing cycles, 
-                            payment tracking, expense management, and comprehensive reporting.
-                        </p>
-                        <div class="app-features">
-                            <div class="feature-tag">Billing Automation</div>
-                            <div class="feature-tag">Payment Tracking</div>
-                            <div class="feature-tag">Reports</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="contact-wrapper">
-                <div class="contact-info">
-                    <div class="section-label">
-                        <span class="label-dot"></span>
-                        <span>Get In Touch</span>
-                    </div>
-                    <h2 class="section-title">Let's Build Something Great Together</h2>
-                    <p class="contact-description">
-                        Whether you need a custom software solution, property management assistance, 
-                        or business consulting, I'm here to help turn your vision into reality.
-                    </p>
-                    <div class="contact-methods">
-                        <div class="contact-method">
-                            <div class="method-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                    <polyline points="22,6 12,13 2,6"/>
-                                </svg>
-                            </div>
-                            <div class="method-content">
-                                <span class="method-label">Email</span>
-                                <a href="mailto:gsouleman@gmail.com" class="method-value">gsouleman@gmail.com</a>
-                            </div>
-                        </div>
-                        <div class="contact-method">
-                            <div class="method-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                                </svg>
-                            </div>
-                            <div class="method-content">
-                                <span class="method-label">Phone</span>
-                                <a href="tel:+237675299868" class="method-value">+237 675 299 868</a>
-                            </div>
-                        </div>
-                        <div class="contact-method">
-                            <div class="method-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                    <circle cx="12" cy="10" r="3"/>
-                                </svg>
-                            </div>
-                            <div class="method-content">
-                                <span class="method-label">Location</span>
-                                <span class="method-value">Douala, Cameroon</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-card">
-                    <div class="card-decoration"></div>
-                    <div class="card-content">
-                        <h3>Ready to Start?</h3>
-                        <p>
-                            Send me a message and I'll get back to you within 24 hours to discuss 
-                            your project requirements and how I can help.
-                        </p>
-                        <a href="mailto:gsouleman@gmail.com?subject=Project%20Inquiry" class="btn btn-white">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                                <polyline points="22,6 12,13 2,6"/>
-                            </svg>
-                            <span>Send Email</span>
-                        </a>
-                        <a href="tel:+237675299868" class="btn btn-outline-white">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                            </svg>
-                            <span>Call Now</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-main">
-                <div class="footer-brand">
-                    <a href="/" class="logo">
-                        <span class="logo-mark">G</span>
-                        <div class="logo-text">
-                            <span class="logo-name">GHOUENZEN</span>
-                            <span class="logo-tagline">Solutions</span>
-                        </div>
-                    </a>
-                    <p class="footer-description">
-                        Delivering innovative business and technology solutions from Douala, Cameroon.
-                    </p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4>Navigation</h4>
-                        <a href="#home">Home</a>
-                        <a href="#about">About</a>
-                        <a href="#expertise">Expertise</a>
-                        <a href="#applications">Applications</a>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Applications</h4>
-                        <a href="https://campost-biling.onrender.com" target="_blank">Estate Management</a>
-                        <a href="/login">Debts and Outstanding Rights</a>
-                        <span class="coming">Property Billing (Soon)</span>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Contact</h4>
-                        <a href="mailto:gsouleman@gmail.com">gsouleman@gmail.com</a>
-                        <a href="tel:+237675299868">+237 675 299 868</a>
-                        <span>Douala, Cameroon</span>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2025 GHOUENZEN SOULEMANOU. All rights reserved.</p>
-                <p>Crafted with precision in Douala, Cameroon</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="/js/app.js"></script>
+        </header>
+        
+        <section class="hero">
+            <h1>GHOUENZEN Services Portal</h1>
+            <p>Access all your business management applications from one central location</p>
+        </section>
+        
+        <section class="apps-grid">
+            <!-- Debts and Outstanding Rights - Requires Login -->
+            <a href="/login" class="app-card featured">
+                <div class="app-icon">📊</div>
+                <h3>Debts & Outstanding Rights</h3>
+                <p>Track creditors, debtors, payments, and generate bilingual statements. Comprehensive financial management system.</p>
+                <span class="app-badge">🔒 Login Required</span>
+            </a>
+            
+            <!-- Estate Management - External Link -->
+            <a href="https://campost-biling.onrender.com" target="_blank" class="app-card">
+                <div class="app-icon">🏠</div>
+                <h3>Estate Management</h3>
+                <p>CAMPOST Mankon billing and property management system. Manage tenants, invoices, and property records.</p>
+                <span class="app-badge">External App</span>
+            </a>
+            
+            <!-- Admin Panel - For Admins -->
+            <a href="/admin" class="app-card">
+                <div class="app-icon">⚙️</div>
+                <h3>Admin Panel</h3>
+                <p>Manage users, reset passwords, and configure system settings. Admin access only.</p>
+                <span class="app-badge">🔒 Admin Only</span>
+            </a>
+        </section>
+        
+        <footer>
+            <p>&copy; 2025 GHOUENZEN Services. All rights reserved.</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="/login">Login</a> · 
+                <a href="/admin">Admin</a>
+            </p>
+        </footer>
+    </div>
 </body>
 </html>
